@@ -1,7 +1,7 @@
 # 클레이튼 web3.py 연습
 
 ## 세팅
-### Python 3.9.5
+#### Python 3.9.5
 ```
 pip install -r requirements.txt
 ```
