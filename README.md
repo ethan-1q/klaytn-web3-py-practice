@@ -5,7 +5,12 @@
 ```
 pip install -r requirements.txt
 ```
-#### ERC20, ERC721 베이스 다운로드
+#### Solidity 0.8.6
+```
+brew tap ethereum/ethereum
+brew install solidity
+```
+#### ERC20, ERC721 베이스 소스
 ```
 cd contracts
 git clone https://github.com/OpenZeppelin/openzeppelin-contracts.git
