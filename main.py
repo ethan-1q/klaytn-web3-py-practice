@@ -6,7 +6,7 @@ from contract import deploy_sol_file, send_token
 from util import load_depolyed_contract
 
 
-w3 = Web3(HTTPProvider('https://api.baobab.klaytn.net:8651'))
+w3 = Web3(HTTPProvider('http://chainnet-en-pg001.dakao.io:8551'))
 w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 # 컨트랙트 배포자 주소
