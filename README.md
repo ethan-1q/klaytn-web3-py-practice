@@ -5,6 +5,11 @@
 ```
 pip install -r requirements.txt
 ```
+#### ERC20, ERC721 베이스 다운로드
+```
+cd contracts
+git clone https://github.com/OpenZeppelin/openzeppelin-contracts.git
+```
 
 ## 실행
 ### 컨트랙트 확인
