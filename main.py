@@ -2,8 +2,8 @@ import sys
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
-from contract import deploy_sol_file, send_token
-from util import load_depolyed_contract
+from app.contract import send_token
+from app.util import load_depolyed_contract
 
 
 w3 = Web3(HTTPProvider('http://chainnet-en-pg001.dakao.io:8551'))
@@ -16,21 +16,8 @@ contract_owner_priavte_key = '0x19a0e6c99aaef89900278e29af962e35bab66394312e55d8
 # 토큰 전송 테스트용 계정 주소
 test_address = w3.toChecksumAddress('0x9e06bf1eca9e3194141f7bede658a8d344614db9')
 
-# 배포
-if 'deploy' in sys.argv:
-    receipt = deploy_sol_file(
-        w3,
-        1001,  # baobab
-        'contracts/MyERC20.sol',
-        'GLDToken',
-        contract_owner_address,
-        contract_owner_priavte_key)
 
-    print('Deployed to: {}'.format(receipt['contractAddress']))
-    print()
-
-address, abi = load_depolyed_contract()
-
+address, abi = load_depolyed_contract('TestToken')
 contract = w3.eth.contract(address, abi=abi)
 
 # 토큰 정보 훑어보기
