@@ -4,5 +4,6 @@ __pycache__
 
 build
 node_modules
+receipts
 
 truffle
