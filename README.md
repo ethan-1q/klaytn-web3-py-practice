@@ -26,7 +26,7 @@ python main.py
 python main.py send_token
 ```
 
-## 프로젝트 구성 방법
+## npm 및 truffle 구성 방법
 #### npm
 ```shell
 npm init
