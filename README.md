@@ -56,7 +56,7 @@ contract TestToken is ERC20 {
     }
 }
 ```
-migrations/2_deploy_contracts.sol
+migrations/2_deploy_contracts.js
 ```js
 const TestToken = artifacts.require("./TestToken.sol");
 
