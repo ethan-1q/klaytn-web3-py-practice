@@ -71,10 +71,9 @@ migrations/2_deploy_contracts.js
 ```js
 const MyToken = artifacts.require("./MyToken.sol");
 
-module.exports = function (deployer) {
-  deployer.deploy(MyToken);
+module.exports = async function (deployer) {
+  await deployer.deploy(MyToken, 'MyToken', 'TEST', (1e24).toLocaleString('fullwide', {useGrouping:false}));
 };
-
 ```
 truffle-config.js
 ```js
