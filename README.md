@@ -17,17 +17,17 @@ ln -s node_modules/truffle/build/cli.bundled.js truffle
 ```
 
 ## 실행
-### 컨트랙트 확인
+#### 컨트랙트 확인
 ```shell
 python main.py
 ```
-### 토큰 전송
+#### 토큰 전송
 ```shell
 python main.py send_token
 ```
 
 ## 테스트
-### truffle 개발용 클라이언트 실행
+#### truffle 개발용 클라이언트 실행
 ```shell
 ./truffle develop
 ```
