@@ -8,7 +8,7 @@ pip install -r requirements.txt
 #### Node.js 14.17.3
 ```shell
 npm install github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb
-npm install
+npm install # deploy 시 --production 옵션 추가
 ln -s node_modules/truffle/build/cli.bundled.js truffle
 ```
 #### 컨트랙트 배포
