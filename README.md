@@ -27,9 +27,11 @@ python main.py send_token
 ```
 
 ## 테스트
-### truffle-solidity
+### truffle 개발용 클라이언트 실행
 ```shell
 ./truffle develop
+```
+```shell
 truffle(develop)> compile
 truffle(develop)> migrate
 truffle(develop)> test
