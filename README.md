@@ -56,7 +56,7 @@ contract MyToken is ERC20 {
     }
 }
 ```
-migrations/2_deploy_contracts.sol
+migrations/2_deploy_contracts.js
 ```js
 const MyToken = artifacts.require("./MyToken.sol");
 
