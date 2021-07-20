@@ -26,6 +26,15 @@ python main.py
 python main.py send_token
 ```
 
+## 테스트
+### truffle-solidity
+```shell
+./truffle develop
+truffle(develop)> compile
+truffle(develop)> migrate
+truffle(develop)> test
+```
+
 ## npm 및 truffle 구성 방법
 #### npm
 ```shell
