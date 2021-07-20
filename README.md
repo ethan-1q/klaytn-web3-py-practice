@@ -42,7 +42,7 @@ npm audit fix
 ```shell
 ./truffle init
 ```
-contracts/TestToken.sol
+contracts/MyToken.sol
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
 
@@ -50,18 +50,18 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract TestToken is ERC20 {
-    constructor() ERC20("TestToken", "TEST") {
+contract MyToken is ERC20 {
+    constructor() ERC20("MyToken", "TEST") {
         _mint(msg.sender, 1e24);
     }
 }
 ```
 migrations/2_deploy_contracts.sol
 ```js
-const TestToken = artifacts.require("./TestToken.sol");
+const MyToken = artifacts.require("./MyToken.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(TestToken);
+  deployer.deploy(MyToken);
 };
 
 ```

@@ -1,7 +1,7 @@
-const TestToken = artifacts.require("./TestToken.sol");
-const TestNFT = artifacts.require("./TestNFT.sol");
+const MyToken = artifacts.require("./MyToken.sol");
+const MyNFT = artifacts.require("./MyNFT.sol");
 
-module.exports = function (deployer) {
-  deployer.deploy(TestToken);
-  deployer.deploy(TestNFT);
+module.exports = async function (deployer) {
+  await deployer.deploy(MyToken, 'MyToken', 'TEST', (1e24).toLocaleString('fullwide', {useGrouping:false}));
+  await deployer.deploy(MyNFT);
 };

@@ -17,7 +17,7 @@ contract_owner_priavte_key = '0x19a0e6c99aaef89900278e29af962e35bab66394312e55d8
 test_address = w3.toChecksumAddress('0x9e06bf1eca9e3194141f7bede658a8d344614db9')
 
 
-address, abi = load_depolyed_contract('TestToken')
+address, abi = load_depolyed_contract('MyToken')
 contract = w3.eth.contract(address, abi=abi)
 
 # 토큰 정보 훑어보기
@@ -41,7 +41,7 @@ print()
 
 if 'send_token' in sys.argv:
     # 토큰 전송
-    receipt = send_token(w3, contract, contract_owner_address, test_address, 10000000, contract_owner_priavte_key)
+    receipt = send_token(w3, contract, contract_owner_address, test_address, int(1e18), contract_owner_priavte_key)
     print('receipt:', receipt)
     print()
 
