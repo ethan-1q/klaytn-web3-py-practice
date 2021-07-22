@@ -34,7 +34,8 @@ contract('MyToken', function (accounts) {
   });
 
   it('has 10000 tokens', async function () {
-    expect(await this.token.totalSupply()).to.be.bignumber.equal(TOTAL_SUPPLY);
+    const supplied = new BN('10000' + '0'.repeat(18));
+    expect(await this.token.totalSupply()).to.be.bignumber.equal(supplied);
   });
 
   it('assigns the initial total supply to the initialHolder', async function () {
