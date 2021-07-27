@@ -54,7 +54,7 @@ contract('MyToken', function (accounts) {
         expect(await this.token.balanceOf(recipient)).to.be.bignumber.equal(amount);
       });
       it('emits a Transfer event', async function () {
-        expectEvent(this.receipt, 'Transfer', {
+        await expectEvent(this.receipt, 'Transfer', {
           from: initialHolder,
           to: recipient,
           value: amount,
@@ -64,15 +64,13 @@ contract('MyToken', function (accounts) {
     describe('when the sender is the zero address', function () {
       it('reverts', async function () {
         await expectRevert(this.token.transferFrom(ZERO_ADDRESS, recipient, amount),
-          'ERC20: transfer from the zero address',
-        );
+          'ERC20: transfer from the zero address');
       });
     });
     describe('when the recipient is the zero address', function () {
       it('reverts', async function () {
         await expectRevert(this.token.transfer(ZERO_ADDRESS, amount),
-          'ERC20: transfer to the zero address',
-        );
+          'ERC20: transfer to the zero address');
       });
     });
   });

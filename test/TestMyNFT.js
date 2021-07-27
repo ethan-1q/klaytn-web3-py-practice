@@ -28,38 +28,56 @@ contract('MyNFT', function (accounts) {
     expect(await this.token.symbol()).to.be.equal(SYMBOL);
   });
 
-  describe('when first deploy', function () {
+  describe('When first deploy', function () {
     it('has 0 tokens', async function () {
-      expect(await this.token.totalSupply()).to.be.bignumber.equal(new BN('0'));
+      expect(await this.token.balanceOf(owner)).to.be.bignumber.equal(new BN('0'));
+      expect(await this.token.balanceOf(recipient)).to.be.bignumber.equal(new BN('0'));
     });
   });
 
-  describe('when 1 item minted', function () {
+  describe('_mint', function () {
     beforeEach(async function () {
-      await this.token.mintNFT('first NFT', owner);
+      await this.token.mintFromData(owner, 'test data');
     });
 
-    it('has 1 tokens', async function () {
-      expect(await this.token.totalSupply()).to.be.bignumber.equal(new BN('1'));
+    describe('When 1 item is minted', function () {
+      it('has 1 tokens', async function () {
+        expect(await this.token.balanceOf(owner)).to.be.bignumber.equal(new BN('1'));
+      });
+    });
+
+    describe('When duplicated item is minted', function () {
+      it('reverts', async function () {
+        await expectRevert(this.token.mintFromData(owner, 'test data'),
+            'ERC721: token already minted');
+      });
     });
   });
 
   describe('_transfer', function () {
     beforeEach(async function () {
-      await this.token.mintNFT('first NFT', owner);
-      await this.token.mintNFT('second NFT', owner);
+      await this.token.mintFromData(owner, 'test data1');
+      await this.token.mintFromData(owner, 'test data2');
     });
 
     describe('before transfer', function () {
+      it('has 2 tokens for owner', async function () {
+        expect(await this.token.balanceOf(owner)).to.be.bignumber.equal(new BN('2'));
+      });
+
       it('has no token for recipient', async function () {
         expect(await this.token.balanceOf(recipient)).to.be.bignumber.equal(new BN('0'));
       });
     });
 
     describe('after transfer', function () {
-      const tokenId = new BN('0');
       beforeEach(async function () {
-        this.receipt = await this.token.transferFrom(owner, recipient, tokenId);
+        const nftId = await this.token.getTokenIdFromData('test data1');
+        this.receipt = await this.token.safeTransferFrom(owner, recipient, nftId);
+      });
+
+      it('remains 1 token to owner', async function () {
+        expect(await this.token.balanceOf(owner)).to.be.bignumber.equal(new BN('1'));
       });
 
       it('gives 1 token to recipient', async function () {
@@ -67,7 +85,8 @@ contract('MyNFT', function (accounts) {
       });
 
       it('emits a Transfer event', async function () {
-        expectEvent(this.receipt, 'Transfer', { from: owner, to: recipient, tokenId: tokenId });
+        const tokenId = await this.token.getTokenIdFromData('test data1');
+        await expectEvent(this.receipt, 'Transfer', { from: owner, to: recipient, tokenId: tokenId });
       });
     });
   });
