@@ -3,8 +3,8 @@
     "@openzeppelin/contracts": "^4.2.0",
     "caver-js": "^1.6.3",
     "scrypt": "github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb",
-    "truffle": "^5.4.1",
-    "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
+    "truffle": "^5.4.2",
+    "truffle-hdwallet-provider-klaytn": "^1.4.1"
   },
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.12"
