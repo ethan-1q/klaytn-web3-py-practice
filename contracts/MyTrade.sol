@@ -6,7 +6,7 @@ import "../contracts/MyNFT.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
 contract MyTrade is ERC721Holder{
-    event TradeStatusChange(uint256 ad, bytes32 status);
+    event TradeStatusChange(uint256 tradeId, bytes32 status);
 
     struct Trade {
         address poster;
@@ -35,8 +35,7 @@ contract MyTrade is ERC721Holder{
      */
     function openTrade(string memory nftData, address exchanger_) public {
         uint256 nftId = itemToken.getTokenIdFromData(nftData);
-        address owner = itemToken.ownerOf(nftId);
-        itemToken.safeTransferFrom(owner, exchanger_, nftId);
+        itemToken.safeTransferFrom(msg.sender, exchanger_, nftId);
 
         trades[tradeCounter] = Trade({
             poster: msg.sender,

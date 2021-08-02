@@ -86,7 +86,35 @@ contract('MyNFT', function (accounts) {
 
       it('emits a Transfer event', async function () {
         const tokenId = await this.token.getTokenIdFromData('test data1');
-        await expectEvent(this.receipt, 'Transfer', { from: owner, to: recipient, tokenId: tokenId });
+        await expectEvent(this.receipt, 'Transfer', {from: owner, to: recipient, tokenId: tokenId});
+      });
+    });
+  });
+
+  describe('_burn', function () {
+    beforeEach(async function () {
+      await this.token.mintFromData(owner, 'test data1');
+      await this.token.mintFromData(owner, 'test data2');
+    });
+
+    describe('before burn', function () {
+      it('has 2 tokens for owner', async function () {
+        expect(await this.token.balanceOf(owner)).to.be.bignumber.equal(new BN('2'));
+      });
+    });
+
+    describe('after burn', function () {
+      beforeEach(async function () {
+        this.receipt = await this.token.burnFromData('test data1');
+      });
+
+      it('remains 1 token to owner', async function () {
+        expect(await this.token.balanceOf(owner)).to.be.bignumber.equal(new BN('1'));
+      });
+
+      it('emits a Transfer event', async function () {
+        const tokenId = await this.token.getTokenIdFromData('test data1');
+        await expectEvent(this.receipt, 'Transfer', {from: owner, to: ZERO_ADDRESS, tokenId: tokenId});
       });
     });
   });

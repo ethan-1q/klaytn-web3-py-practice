@@ -2,6 +2,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
     "caver-js": "^1.6.3",
+    "ethers": "^5.4.3",
     "scrypt": "github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb",
     "truffle": "^5.4.2",
     "truffle-hdwallet-provider-klaytn": "^1.4.1"
