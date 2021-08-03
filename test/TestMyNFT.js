@@ -37,7 +37,7 @@ contract('MyNFT', function (accounts) {
 
   describe('_mint', function () {
     beforeEach(async function () {
-      await this.token.mintFromData(owner, 'test data');
+      await this.token.mintFromContent(owner, 'test data');
     });
 
     describe('When 1 item is minted', function () {
@@ -48,7 +48,7 @@ contract('MyNFT', function (accounts) {
 
     describe('When duplicated item is minted', function () {
       it('reverts', async function () {
-        await expectRevert(this.token.mintFromData(owner, 'test data'),
+        await expectRevert(this.token.mintFromContent(owner, 'test data'),
             'ERC721: token already minted');
       });
     });
@@ -56,8 +56,8 @@ contract('MyNFT', function (accounts) {
 
   describe('_transfer', function () {
     beforeEach(async function () {
-      await this.token.mintFromData(owner, 'test data1');
-      await this.token.mintFromData(owner, 'test data2');
+      await this.token.mintFromContent(owner, 'test data1');
+      await this.token.mintFromContent(owner, 'test data2');
     });
 
     describe('before transfer', function () {
@@ -72,7 +72,7 @@ contract('MyNFT', function (accounts) {
 
     describe('after transfer', function () {
       beforeEach(async function () {
-        const nftId = await this.token.getTokenIdFromData('test data1');
+        const nftId = await this.token.getTokenIdFromContent('test data1');
         this.receipt = await this.token.safeTransferFrom(owner, recipient, nftId);
       });
 
@@ -85,7 +85,7 @@ contract('MyNFT', function (accounts) {
       });
 
       it('emits a Transfer event', async function () {
-        const tokenId = await this.token.getTokenIdFromData('test data1');
+        const tokenId = await this.token.getTokenIdFromContent('test data1');
         await expectEvent(this.receipt, 'Transfer', {from: owner, to: recipient, tokenId: tokenId});
       });
     });
@@ -93,8 +93,8 @@ contract('MyNFT', function (accounts) {
 
   describe('_burn', function () {
     beforeEach(async function () {
-      await this.token.mintFromData(owner, 'test data1');
-      await this.token.mintFromData(owner, 'test data2');
+      await this.token.mintFromContent(owner, 'test data1');
+      await this.token.mintFromContent(owner, 'test data2');
     });
 
     describe('before burn', function () {
@@ -105,7 +105,7 @@ contract('MyNFT', function (accounts) {
 
     describe('after burn', function () {
       beforeEach(async function () {
-        this.receipt = await this.token.burnFromData('test data1');
+        this.receipt = await this.token.burnFromContent('test data1');
       });
 
       it('remains 1 token to owner', async function () {
@@ -113,7 +113,7 @@ contract('MyNFT', function (accounts) {
       });
 
       it('emits a Transfer event', async function () {
-        const tokenId = await this.token.getTokenIdFromData('test data1');
+        const tokenId = await this.token.getTokenIdFromContent('test data1');
         await expectEvent(this.receipt, 'Transfer', {from: owner, to: ZERO_ADDRESS, tokenId: tokenId});
       });
     });

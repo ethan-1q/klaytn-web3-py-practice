@@ -10,28 +10,28 @@ contract MyNFT is ERC721, ERC721Burnable {
 
     /**
      * @dev get NFT id
-     * @param nftData NFT 내용
+     * @param nftContent NFT 내용
      */
-    function getTokenIdFromData(string memory nftData) public pure returns (uint256) {
-        return uint256(keccak256(abi.encodePacked(nftData)));
+    function getTokenIdFromContent(string memory nftContent) public pure returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(nftContent)));
     }
 
     /**
      * @dev NFT 발행
      * @param account 발행자 주소
-     * @param nftData NFT 내용
+     * @param nftContent NFT 내용
      */
-    function mintFromData(address account, string memory nftData) public {
-        uint256 nftId = getTokenIdFromData(nftData);
+    function mintFromContent(address account, string memory nftContent) public {
+        uint256 nftId = getTokenIdFromContent(nftContent);
         _safeMint(account, nftId);
     }
 
     /**
      * @dev NFT 소각
-     * @param nftData NFT 내용
+     * @param nftContent NFT 내용
      */
-    function burnFromData(string memory nftData) public {
-        uint256 nftId = getTokenIdFromData(nftData);
+    function burnFromContent(string memory nftContent) public {
+        uint256 nftId = getTokenIdFromContent(nftContent);
         burn(nftId);
     }
 }
