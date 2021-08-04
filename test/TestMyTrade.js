@@ -1,8 +1,9 @@
 // Import utilities
 const { expect } = require('chai');
 const { BN, expectEvent, expectRevert, constants } = require('@openzeppelin/test-helpers');
-const ethers = require('ethers')
+const ethers = require('ethers');
 const { ZERO_ADDRESS } = constants;
+const { toWei } = web3.utils;
 
 // Load compiled artifacts
 const MyTrade = artifacts.require('MyTrade');
@@ -15,7 +16,7 @@ contract('MyTrade', function (accounts) {
 
   const TOKEN_NAME = 'MyToken';
   const TOKEN_SYMBOL = 'TEST';
-  const TOKEN_TOTAL_SUPPLY = new BN('10000000000000000000000');
+  const TOKEN_TOTAL_SUPPLY = new BN(toWei('10000', 'ether'));
   const NFT_NAME = 'MyNFT';
   const NFT_SYMBOL = 'NFT';
 
@@ -26,17 +27,17 @@ contract('MyTrade', function (accounts) {
     this.nft = await MyNFT.new(NFT_NAME, NFT_SYMBOL, {from: nft_owner});
     this.trade = await MyTrade.new(this.token.address, this.nft.address, {from: exchanger});
 
+    // seller의 nft 발행
     await this.nft.mintFromContent(seller, nftContent, {from: nft_owner});
-    const nftId = await this.nft.getTokenIdFromContent(nftContent);
-    await this.nft.approve(this.trade.address, nftId, {from: seller});
 
-    await this.token.transfer(exchanger, new BN('5000000000000000000'), {from: token_owner});
-    await this.token.transfer(buyer, new BN('5000000000000000000'), {from: token_owner});
-    await this.token.approve(exchanger, new BN('3000000000000000000'), {from: buyer});
+    // 거래를 위한 최초 토큰 지급
+    await this.token.transfer(buyer, new BN(toWei('5', 'ether')), {from: token_owner});
   });
 
   describe('When open the first trade', function () {
     it('emits a TradeStatusChange event (Open)', async function () {
+      const nftId = await this.nft.getTokenIdFromContent(nftContent);
+      await this.nft.approve(this.trade.address, nftId, {from: seller});
       const receipt = await this.trade.openTrade(nftContent, this.trade.address, {from: seller});
       await expectEvent(receipt, 'TradeStatusChange', {
         tradeId: new BN('0'),
@@ -47,6 +48,8 @@ contract('MyTrade', function (accounts) {
 
   describe('Given opened trade', function () {
     beforeEach(async function () {
+      const nftId = await this.nft.getTokenIdFromContent(nftContent);
+      await this.nft.approve(this.trade.address, nftId, {from: seller});
       await this.trade.openTrade(nftContent, this.trade.address, {from: seller});
     });
 
@@ -70,10 +73,27 @@ contract('MyTrade', function (accounts) {
       });
     });
 
-    describe('When trade is executed at 1e18 wei', function () {
+    describe('When trade is not executed yet', function () {
+      it('Buyer\'s balance is 5 ether', async function () {
+        expect(await this.token.balanceOf(buyer)).to.be.bignumber.equal(new BN(toWei('5', 'ether')));
+      });
+      it('Seller\'s balance is 0 ether', async function () {
+        expect(await this.token.balanceOf(seller)).to.be.bignumber.equal(new BN('0'));
+      });
+      it('Buyer has 0 nft', async function () {
+        expect(await this.nft.balanceOf(buyer)).to.be.bignumber.equal(new BN('0'));
+      });
+      it('Market has 1 nft', async function () {
+        expect(await this.nft.balanceOf(this.trade.address)).to.be.bignumber.equal(new BN('1'));
+      });
+    });
+
+    describe('When trade is executed at 1 ether', function () {
       beforeEach(async function () {
+        await this.token.approve(this.trade.address, new BN(toWei('1', 'ether')), {from: buyer});
+        await this.token.approve(this.trade.address, new BN(toWei('1', 'ether')), {from: exchanger});
         this.receipt = await this.trade.executeTrade(
-            nftContent, new BN('1000000000000000000'), buyer, seller, new BN('1'), new BN('1'), {from: exchanger}
+            nftContent, new BN(toWei('1', 'ether')), buyer, seller, new BN('1'), new BN('1'), {from: exchanger}
         );
       });
 
@@ -82,6 +102,20 @@ contract('MyTrade', function (accounts) {
           tradeId: new BN('0'),
           status: ethers.utils.formatBytes32String('Executed')
         });
+      });
+
+      it('Buyer\'s balance is 4 ether', async function () {
+        expect(await this.token.balanceOf(buyer)).to.be.bignumber.equal(new BN(toWei('4', 'ether')));
+      });
+      it('Seller\'s balance is greater than 0 ether and less than 1 ether', async function () {
+        expect(await this.token.balanceOf(seller)).to.be.bignumber.greaterThan(new BN('0'));
+        expect(await this.token.balanceOf(seller)).to.be.bignumber.lessThan(new BN(toWei('1', 'ether')));
+      });
+      it('Buyer has 1 nft', async function () {
+        expect(await this.nft.balanceOf(buyer)).to.be.bignumber.equal(new BN('1'));
+      });
+      it('Market has 0 nft', async function () {
+        expect(await this.nft.balanceOf(this.trade.address)).to.be.bignumber.equal(new BN('0'));
       });
     });
   });
