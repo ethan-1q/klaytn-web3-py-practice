@@ -74,10 +74,10 @@ contract('MyTrade', function (accounts) {
     });
 
     describe('When trade is not executed yet', function () {
-      it('Buyer\'s balance is 5 ether', async function () {
+      it('Buyer\'s balance is 5 MyToken', async function () {
         expect(await this.token.balanceOf(buyer)).to.be.bignumber.equal(new BN(toWei('5', 'ether')));
       });
-      it('Seller\'s balance is 0 ether', async function () {
+      it('Seller\'s balance is 0 MyToken', async function () {
         expect(await this.token.balanceOf(seller)).to.be.bignumber.equal(new BN('0'));
       });
       it('Buyer has 0 nft', async function () {
@@ -88,7 +88,7 @@ contract('MyTrade', function (accounts) {
       });
     });
 
-    describe('When trade is executed at 1 ether', function () {
+    describe('When trade is executed at 1 MyToken', function () {
       beforeEach(async function () {
         await this.token.approve(this.trade.address, new BN(toWei('1', 'ether')), {from: buyer});
         await this.token.approve(this.trade.address, new BN(toWei('1', 'ether')), {from: exchanger});
@@ -104,10 +104,10 @@ contract('MyTrade', function (accounts) {
         });
       });
 
-      it('Buyer\'s balance is 4 ether', async function () {
+      it('Buyer\'s balance is 4 MyToken', async function () {
         expect(await this.token.balanceOf(buyer)).to.be.bignumber.equal(new BN(toWei('4', 'ether')));
       });
-      it('Seller\'s balance is greater than 0 ether and less than 1 ether', async function () {
+      it('Seller\'s balance is greater than 0 MyToken and less than 1 MyToken', async function () {
         expect(await this.token.balanceOf(seller)).to.be.bignumber.greaterThan(new BN('0'));
         expect(await this.token.balanceOf(seller)).to.be.bignumber.lessThan(new BN(toWei('1', 'ether')));
       });
