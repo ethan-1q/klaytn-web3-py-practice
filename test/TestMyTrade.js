@@ -30,14 +30,14 @@ contract('MyTrade', function (accounts) {
     const nftId = await this.nft.getTokenIdFromContent(nftContent);
     await this.nft.approve(this.trade.address, nftId, {from: seller});
 
-    await this.token.transfer(exchanger, new BN('50000'), {from: token_owner});
-    await this.token.transfer(buyer, new BN('50000'), {from: token_owner});
-    await this.token.approve(exchanger, new BN('30000'), {from: buyer});
+    await this.token.transfer(exchanger, new BN('5000000000000000000'), {from: token_owner});
+    await this.token.transfer(buyer, new BN('5000000000000000000'), {from: token_owner});
+    await this.token.approve(exchanger, new BN('3000000000000000000'), {from: buyer});
   });
 
   describe('When open the first trade', function () {
     it('emits a TradeStatusChange event (Open)', async function () {
-      const receipt = await this.trade.openTrade(nftContent, {from: seller});
+      const receipt = await this.trade.openTrade(nftContent, this.trade.address, {from: seller});
       await expectEvent(receipt, 'TradeStatusChange', {
         tradeId: new BN('0'),
         status: ethers.utils.formatBytes32String('Open')
@@ -47,7 +47,7 @@ contract('MyTrade', function (accounts) {
 
   describe('Given opened trade', function () {
     beforeEach(async function () {
-      await this.trade.openTrade(nftContent, {from: seller});
+      await this.trade.openTrade(nftContent, this.trade.address, {from: seller});
     });
 
     describe('When trade is cancelled trade by the poster', function () {
@@ -70,19 +70,19 @@ contract('MyTrade', function (accounts) {
       });
     });
 
-    // describe('When trade is executed at 10000 token', function () {
-    //   beforeEach(async function () {
-    //     this.receipt = await this.trade.executeTrade(
-    //         nftContent, new BN('10000'), buyer, seller, new BN('1'), new BN('1'), {from: exchanger}
-    //     );
-    //   });
-    //
-    //   it('emits a TradeStatusChange event (Executed)', async function () {
-    //     await expectEvent(this.receipt, 'TradeStatusChange', {
-    //       tradeId: new BN('0'),
-    //       status: ethers.utils.formatBytes32String('Executed')
-    //     });
-    //   });
-    // });
+    describe('When trade is executed at 1e18 wei', function () {
+      beforeEach(async function () {
+        this.receipt = await this.trade.executeTrade(
+            nftContent, new BN('1000000000000000000'), buyer, seller, new BN('1'), new BN('1'), {from: exchanger}
+        );
+      });
+
+      it('emits a TradeStatusChange event (Executed)', async function () {
+        await expectEvent(this.receipt, 'TradeStatusChange', {
+          tradeId: new BN('0'),
+          status: ethers.utils.formatBytes32String('Executed')
+        });
+      });
+    });
   });
 });

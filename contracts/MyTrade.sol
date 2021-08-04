@@ -33,16 +33,17 @@ contract MyTrade is ERC721Holder{
     /**
      * @dev 새로운 아이템 등록. 게시자는 NFT 아이템을 마켓에게 전송한다.
      * @param nftContent: NFT 내용
+     * @param exchanger: 마켓 address
      */
-    function openTrade(string memory nftContent) public {
+    function openTrade(string memory nftContent, address exchanger) public {
         uint256 nftId = itemToken.getTokenIdFromContent(nftContent);
-        itemToken.safeTransferFrom(msg.sender, address(this), nftId);
+        itemToken.safeTransferFrom(msg.sender, exchanger, nftId);
 
         trades[tradeCounter] = Trade({
             poster: msg.sender,
             itemId: nftId,
             status: "Open",
-            exchanger: address(this)
+            exchanger: exchanger
         });
         tradeByItemId[nftId] = tradeCounter;
         tradeCounter += 1;
@@ -85,7 +86,7 @@ contract MyTrade is ERC721Holder{
         Trade memory trade = trades[tradeId];
         require(trade.status == "Open", "Trade is not Open.");
 
-//        currencyToken.transferFrom(buyer, msg.sender, price);
+        currencyToken.transferFrom(buyer, msg.sender, price);
 
         uint256 org_author_cs = price * org_author_csp / 100;
         uint256 exchanger_cs = price * exchanger_csp / 100;
@@ -93,9 +94,9 @@ contract MyTrade is ERC721Holder{
 
         currencyToken.transferFrom(msg.sender, trade.poster, remain);
 
-//        if (org_author_cs > 0) {
-//            currencyToken.transferFrom(msg.sender, org_author, org_author_cs);
-//        }
+        if (org_author_cs > 0) {
+            currencyToken.transferFrom(msg.sender, org_author, org_author_cs);
+        }
 
         itemToken.safeTransferFrom(address(this), buyer, trade.itemId);
         trades[tradeId].status = "Executed";
